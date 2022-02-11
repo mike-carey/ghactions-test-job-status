@@ -1,0 +1,18 @@
+---
+
+name: 'Purposefully fails'
+description: 'Fails the action'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Fail'
+      id: fail
+      shell: bash
+      run: exit 1
+  
+    - name: 'Catch all'
+      shell: bash
+      run: echo ${{ job.status }}
+      if: always()
+

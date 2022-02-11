@@ -20,14 +20,14 @@ jobs:
         run: echo ${{ job.status }}
         if: always()
 
-  composite-action:
-    name: 'Fails within the composite action'
+  local-composite-action:
+    name: 'Fails within the local composite action'
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v2
       
-      - name: 'Failing composite action'
+      - name: 'Failing local composite action'
         uses: ./.github/actions/do-something
       
       - name: 'Catch all'
@@ -39,23 +39,40 @@ jobs:
     name: 'Fails within the reusable workflow'
     uses: ./.github/workflows/reusable-workflow.yml
 
+  local-repo-action:
+    name: 'Fails within the repo composite action'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Failing repo composite action'
+        uses: mike-carey/ghactions-test-job-status@main
+      
+      - name: 'Catch all'
+        shell: bash
+        run: echo ${{ job.status }}
+        if: always()
+
   catch-all:
     name: 'A catch all for jobs'
     runs-on: ubuntu-latest
     if: always()
     needs:
       - control-group
-      - composite-action
+      - local-composite-action
       - reusable-workflow
+      - repo-composite-action
     steps:
       - name: 'Control group result'
         shell: bash
         run: echo ${{ needs.control-group.result }}
 
-      - name: 'Composite action result'
+      - name: 'Local composite action result'
         shell: bash
-        run: echo ${{ needs.composite-action.result }}
+        run: echo ${{ needs.local-composite-action.result }}
 
       - name: 'Reusable workflow result'
         shell: bash
         run: echo ${{ needs.reusable-workflow.result }}
+
+      - name: 'Repo composite action result'
+        shell: bash
+        run: echo ${{ needs.repo-composite-action.result }}
