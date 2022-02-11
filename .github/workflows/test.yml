@@ -1,7 +1,7 @@
 ---
 
 name: 'Test'
-description: 'Demonstrates the different levels of job.status'
+# description: 'Demonstrates the different levels of job.status'
 
 on: [workflow_dispatch]
 

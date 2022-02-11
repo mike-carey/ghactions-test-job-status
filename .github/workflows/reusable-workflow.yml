@@ -1,7 +1,7 @@
 ---
 
 name: 'Reusable workflow'
-description: 'Demonstrates how job.status acts within reusable workflows'
+# description: 'Demonstrates how job.status acts within reusable workflows'
 
 on: [workflow_call]
 
