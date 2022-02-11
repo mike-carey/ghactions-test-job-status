@@ -1,0 +1,21 @@
+---
+
+name: 'Reusable workflow'
+description: 'Demonstrates how job.status acts within reusable workflows'
+
+on: [workflow_call]
+
+jobs:
+  failure:
+    name: 'A job that will fail'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Fail'
+        id: fail
+        shell: bash
+        run: exit 1
+    
+      - name: 'Catch all'
+        shell: bash
+        run: echo ${{ job.status }}
+        if: always()

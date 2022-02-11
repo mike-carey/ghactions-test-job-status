@@ -1,0 +1,17 @@
+---
+
+name: 'Do something'
+description: 'Demonstrates how a catch-all works in composite actions'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Fail'
+      id: fail
+      shell: bash
+      run: exit 1
+  
+    - name: 'Catch all'
+      shell: bash
+      run: echo ${{ job.status }}
+      if: always()

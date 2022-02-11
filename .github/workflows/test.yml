@@ -1,0 +1,62 @@
+---
+
+name: 'Test'
+description: 'Demonstrates the different levels of job.status'
+
+on: [workflow_dispatch]
+
+jobs:
+  control-group:
+    name: 'Fails within this workflow itself'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Fail'
+        id: fail
+        shell: bash
+        run: exit 1
+    
+      - name: 'Catch all'
+        shell: bash
+        run: echo ${{ job.status }}
+        if: always()
+
+  composite-action:
+    name: 'Fails within the composite action'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v2
+      
+      - name: 'Failing composite action'
+        uses: ./.github/actions/do-something
+      
+      - name: 'Catch all'
+        shell: bash
+        run: echo ${{ job.status }}
+        if: always()
+
+  reusable-workflow:
+    name: 'Fails within the reusable workflow'
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/reusable-workflow.yml
+
+  catch-all:
+    name: 'A catch all for jobs'
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - control-group
+      - composite-action
+      - reusable-workflow
+    steps:
+      - name: 'Control group result'
+        shell: bash
+        run: echo ${{ needs.control-group.result }}
+
+      - name: 'Composite action result'
+        shell: bash
+        run: echo ${{ needs.composite-action.result }}
+
+      - name: 'Reusable workflow result'
+        shell: bash
+        run: echo ${{ needs.reusable-workflow.result }}
