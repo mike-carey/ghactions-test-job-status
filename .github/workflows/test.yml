@@ -37,7 +37,6 @@ jobs:
 
   reusable-workflow:
     name: 'Fails within the reusable workflow'
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/reusable-workflow.yml
 
   catch-all:
